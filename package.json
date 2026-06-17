@@ -1,0 +1,17 @@
+{
+  "name": "roadtrix",
+  "version": "1.0.0",
+  "description": "RoadTrix Transportation Operations Platform",
+  "private": true,
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "dashboard": "cd admin-dashboard && npm run dev",
+    "mobile": "cd mobile-app && npx expo start",
+    "install:all": "cd backend && npm install && cd ../admin-dashboard && npm install && cd ../mobile-app && npm install",
+    "db:migrate": "cd backend && npx prisma migrate dev",
+    "db:seed": "cd backend && npx prisma db seed",
+    "db:studio": "cd backend && npx prisma studio",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  }
+}

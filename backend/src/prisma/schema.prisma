@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  DISPATCHER
+  DRIVER
+}
+
+enum DriverStatus {
+  AVAILABLE
+  UNAVAILABLE
+  ON_TRIP
+  SUSPENDED
+}
+
+enum LoadStatus {
+  OPEN
+  ASSIGNED
+  ACCEPTED
+  EN_ROUTE_PICKUP
+  PICKED_UP
+  EN_ROUTE_DELIVERY
+  DELIVERED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  role         UserRole
+  firstName    String
+  lastName     String
+  phone        String    @unique
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  driver           Driver?
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+
+  @@index([email])
+  @@index([role])
+}
+
+model Driver {
+  id                String       @id @default(cuid())
+  userId            String       @unique
+  licenseNumber     String       @unique
+  licenseExpiration DateTime
+  vehicleType       String
+  vehicleMake       String
+  vehicleModel      String
+  plateNumber       String       @unique
+  rating            Float        @default(5.0)
+  status            DriverStatus @default(AVAILABLE)
+  currentLat        Float?
+  currentLng        Float?
+  lastLocationAt    DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignments Assignment[]
+  payments    Payment[]
+
+  @@index([status])
+  @@index([userId])
+}
+
+model Load {
+  id              String     @id @default(cuid())
+  sourcePlatform  String
+  externalLoadId  String?
+  pickupAddress   String
+  pickupLat       Float
+  pickupLng       Float
+  deliveryAddress String
+  deliveryLat     Float
+  deliveryLng     Float
+  loadType        String
+  weight          Float
+  brokerPayout    Float
+  driverPayout    Float
+  companyProfit   Float
+  status          LoadStatus @default(OPEN)
+  notes           String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  assignment Assignment?
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Assignment {
+  id          String    @id @default(cuid())
+  loadId      String    @unique
+  driverId    String
+  assignedAt  DateTime  @default(now())
+  acceptedAt  DateTime?
+  completedAt DateTime?
+
+  load   Load   @relation(fields: [loadId], references: [id], onDelete: Cascade)
+  driver Driver @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  trip   Trip?
+
+  @@index([driverId])
+  @@index([loadId])
+}
+
+model Trip {
+  id           String    @id @default(cuid())
+  assignmentId String    @unique
+  startedAt    DateTime?
+  pickupTime   DateTime?
+  deliveryTime DateTime?
+  podImage     String?
+  recipientName String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@index([assignmentId])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  message    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([senderId, receiverId])
+  @@index([createdAt])
+}
+
+model Payment {
+  id         String        @id @default(cuid())
+  driverId   String
+  loadId     String?
+  amount     Float
+  status     PaymentStatus @default(PENDING)
+  payoutDate DateTime?
+  notes      String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  driver Driver @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@index([driverId])
+  @@index([status])
+}
