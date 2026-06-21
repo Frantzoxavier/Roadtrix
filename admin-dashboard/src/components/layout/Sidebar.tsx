@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Truck, Package, Map, CreditCard,
-  BarChart3, Settings, LogOut, Zap,
+  BarChart3, Settings, LogOut,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { cn, getInitials } from '@/utils';
@@ -24,11 +24,11 @@ export function Sidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="fixed inset-y-0 left-0 w-60 bg-primary-900 flex flex-col z-50">
+    <aside className="fixed inset-y-0 left-0 w-60 bg-accent-900 flex flex-col z-50">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 h-16 border-b border-white/10">
-        <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
-          <Zap className="w-4 h-4 text-white" />
+        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+          <Truck className="w-4 h-4 text-accent" />
         </div>
         <span className="text-white font-bold text-lg tracking-tight">RoadTrix</span>
       </div>

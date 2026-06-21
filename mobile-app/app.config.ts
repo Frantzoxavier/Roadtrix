@@ -11,7 +11,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   splash: {
     image: './assets/splash.png',
     resizeMode: 'contain',
-    backgroundColor: '#0F172A',
+    backgroundColor: '#7F1D1D',
   },
   assetBundlePatterns: ['**/*'],
   ios: {
@@ -27,7 +27,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
-      backgroundColor: '#0F172A',
+      backgroundColor: '#7F1D1D',
     },
     package: 'com.roadtrix.driver',
     permissions: [

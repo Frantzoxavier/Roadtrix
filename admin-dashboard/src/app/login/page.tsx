@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
-import { Zap, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Truck, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Spinner } from '@/components/ui';
 
 export default function LoginPage() {
@@ -28,12 +28,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-primary-900 flex">
+    <div className="min-h-screen bg-accent-900 flex">
       {/* Left branding panel */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-gradient-to-br from-primary-900 to-primary-800">
+      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-gradient-to-br from-accent-900 to-accent-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center">
-            <Zap className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
+            <Truck className="w-5 h-5 text-accent" />
           </div>
           <span className="text-white font-bold text-2xl">RoadTrix</span>
         </div>
@@ -70,7 +70,7 @@ export default function LoginPage() {
           {/* Mobile logo */}
           <div className="flex items-center gap-2 mb-8 lg:hidden">
             <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
+              <Truck className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-xl text-primary-900">RoadTrix</span>
           </div>

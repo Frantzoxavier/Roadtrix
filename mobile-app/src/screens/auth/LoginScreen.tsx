@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../../store/auth.store';
 import { Button, Input } from '../../components/ui';
 import { Colors, Spacing, FontSize, BorderRadius } from '../../utils/theme';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -48,7 +48,7 @@ export default function LoginScreen() {
           {/* Logo area */}
           <View style={styles.logoArea}>
             <View style={styles.logoBox}>
-              <Ionicons name="flash" size={32} color={Colors.white} />
+              <MaterialCommunityIcons name="truck" size={36} color={Colors.white} />
             </View>
             <Text style={styles.logoText}>RoadTrix</Text>
             <Text style={styles.tagline}>Driver Portal</Text>
