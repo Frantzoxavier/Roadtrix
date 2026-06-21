@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Truck, Package, Map, CreditCard,
-  BarChart3, Settings, LogOut,
+  BarChart3, Settings, LogOut, Navigation, Wallet, User,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { cn, getInitials } from '@/utils';
 
-const navItems = [
+const staffNav = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/drivers', icon: Truck, label: 'Drivers' },
   { href: '/loads', icon: Package, label: 'Loads' },
@@ -19,9 +19,17 @@ const navItems = [
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
+const driverNav = [
+  { href: '/driver', icon: Package, label: 'My Loads' },
+  { href: '/driver/trip', icon: Navigation, label: 'Active Trip' },
+  { href: '/driver/earnings', icon: Wallet, label: 'Earnings' },
+  { href: '/driver/profile', icon: User, label: 'Profile' },
+];
+
 export function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const navItems = user?.role === 'DRIVER' ? driverNav : staffNav;
 
   return (
     <aside className="fixed inset-y-0 left-0 w-60 bg-accent-900 flex flex-col z-50">
@@ -37,7 +45,9 @@ export function Sidebar() {
       <nav className="flex-1 px-3 py-4 overflow-y-auto scrollbar-hide">
         <div className="space-y-0.5">
           {navItems.map(({ href, icon: Icon, label }) => {
-            const isActive = pathname === href || pathname.startsWith(`${href}/`);
+            const isActive = href === '/driver'
+              ? pathname === '/driver'
+              : pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
                 key={href}

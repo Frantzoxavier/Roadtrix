@@ -49,3 +49,4 @@ backend/src/prisma/migrations/
 
 # Testing
 coverage/
+*.tsbuildinfo
