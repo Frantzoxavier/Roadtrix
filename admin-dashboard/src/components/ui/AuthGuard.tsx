@@ -1,19 +1,31 @@
 'use client';
 
-import { useAuth } from '@/lib/auth-context';
-import { useRouter } from 'next/navigation';
+import { useAuth, roleHome } from '@/lib/auth-context';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Spinner } from '@/components/ui';
 
+/** Roles allowed for a given path prefix. /driver/* is driver-only; everything else is staff-only. */
+function allowedRoles(pathname: string): string[] {
+  return pathname.startsWith('/driver') ? ['DRIVER'] : ['ADMIN', 'DISPATCHER'];
+}
+
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const roleAllowed = !user || allowedRoles(pathname).includes(user.role);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (isLoading) return;
+    if (!isAuthenticated) {
       router.push('/login');
+    } else if (user && !roleAllowed) {
+      // Authenticated but on an area for a different role — send them home.
+      router.replace(roleHome(user.role));
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, user, roleAllowed, router]);
 
   if (isLoading) {
     return (
@@ -26,7 +38,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!isAuthenticated) return null;
+  if (!isAuthenticated || !roleAllowed) return null;
 
   return <>{children}</>;
 }

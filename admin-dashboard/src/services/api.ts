@@ -50,6 +50,9 @@ export const driversApi = {
   create: (data: Record<string, unknown>) => api.post('/drivers', data),
   update: (id: string, data: Record<string, unknown>) => api.patch(`/drivers/${id}`, data),
   delete: (id: string) => api.delete(`/drivers/${id}`),
+  // Driver self-service
+  getMe: () => api.get('/drivers/me'),
+  getActiveLoad: () => api.get('/drivers/me/active-load'),
 };
 
 // ─── Loads ────────────────────────────────────────────────────────────────────
@@ -62,6 +65,15 @@ export const loadsApi = {
   delete: (id: string) => api.delete(`/loads/${id}`),
   assign: (loadId: string, driverId: string) =>
     api.post(`/loads/${loadId}/assign`, { driverId }),
+  // Driver lifecycle actions
+  accept: (id: string) => api.post(`/loads/${id}/accept`),
+  decline: (id: string) => api.post(`/loads/${id}/decline`),
+  start: (id: string) => api.post(`/loads/${id}/start`),
+  pickup: (id: string) => api.post(`/loads/${id}/pickup`),
+  deliver: (id: string, formData: FormData) =>
+    api.post(`/loads/${id}/deliver`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 };
 
 // ─── Payments ─────────────────────────────────────────────────────────────────

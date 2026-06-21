@@ -135,6 +135,7 @@ export default function LoginPage() {
             <div className="space-y-1">
               <p className="text-xs text-slate-600"><span className="font-medium">Admin:</span> admin@roadtrix.com / Admin@123</p>
               <p className="text-xs text-slate-600"><span className="font-medium">Dispatcher:</span> dispatcher@roadtrix.com / Dispatch@123</p>
+              <p className="text-xs text-slate-600"><span className="font-medium">Driver:</span> james.rodriguez@roadtrix.com / Driver@123</p>
             </div>
           </div>
         </div>

@@ -25,6 +25,11 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
+/** Landing route for a given role after login / on access mismatch. */
+export function roleHome(role?: string): string {
+  return role === 'DRIVER' ? '/driver' : '/dashboard';
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -46,15 +51,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const res = await authApi.login(email, password);
     const { token: newToken, user: newUser } = res.data.data;
 
-    if (!['ADMIN', 'DISPATCHER'].includes(newUser.role)) {
-      throw new Error('Access denied. Admin or Dispatcher role required.');
+    if (!['ADMIN', 'DISPATCHER', 'DRIVER'].includes(newUser.role)) {
+      throw new Error('Access denied. This account cannot use the web app.');
     }
 
     localStorage.setItem('roadtrix_token', newToken);
     localStorage.setItem('roadtrix_user', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
-    router.push('/dashboard');
+    router.push(roleHome(newUser.role));
   }, [router]);
 
   const logout = useCallback(() => {
